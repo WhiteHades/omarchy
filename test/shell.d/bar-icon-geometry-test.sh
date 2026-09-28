@@ -173,7 +173,7 @@ ShellRoot {
     text: "EN"
     fontSize: Style.font.caption
     horizontalMargin: 6
-    labelVerticalOffset: Math.max(1, Math.round(Style.fontScale))
+    labelVerticalOffset: Math.max(1, Math.round(Style.font.caption / 10))
     width: implicitWidth
     height: implicitHeight
   }
