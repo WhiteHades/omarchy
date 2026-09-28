@@ -1497,9 +1497,9 @@ Panel {
           required property var modelData
           required property int index
           readonly property string sectionTitle: root.wifiSectionTitle(index)
-          // Keep the list at its full panel width and reserve an internal
-          // gutter for the existing scrollbar by narrowing only the rows.
-          width: ListView.view.width - (networkScrollBar.visible ? networkScrollBar.width : 0)
+          // Narrow only the rows, and only while the list scrolls: an as-needed
+          // scrollbar is still `visible`, just transparent, when everything fits.
+          width: ListView.view.width - (ListView.view.interactive ? networkScrollBar.width : 0)
           height: delegateColumn.implicitHeight
 
           Column {

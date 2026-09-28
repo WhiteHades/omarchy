@@ -19,8 +19,8 @@ assert(
   'network retains its stock as-needed scrollbar'
 )
 assert(
-  /width:\s*ListView\.view\.width\s*-\s*\(networkScrollBar\.visible\s*\?\s*networkScrollBar\.width\s*:\s*0\)/.test(panelSource),
-  'network rows reserve an internal gutter for the visible scrollbar'
+  /width:\s*ListView\.view\.width\s*-\s*\(ListView\.view\.interactive\s*\?\s*networkScrollBar\.width\s*:\s*0\)/.test(panelSource),
+  'network rows reserve a gutter for the scrollbar only while the list scrolls'
 )
 
 assert(/IpcHandler[\s\S]*?function toggleNetwork\(\) \{ root\.toggleNetwork\(\) \}/.test(panelSource), 'network exposes the Wi-Fi radio toggle over IPC')
