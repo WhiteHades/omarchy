@@ -212,8 +212,8 @@ BarWidget {
     text: root.layoutLabel
     fontSize: Style.font.caption
     // Native-rendered caption glyphs sit one visual pixel above the bar's
-    // centre; keep vertical bars symmetric and correct the horizontal label.
-    labelVerticalOffset: root.vertical ? 0 : Style.space(1)
+    // centre at any spacing; keep vertical bars symmetric and correct the horizontal label.
+    labelVerticalOffset: root.vertical ? 0 : Math.max(1, Math.round(Style.fontScale))
     horizontalMargin: 6
     tooltipText: root.layoutFull
     onPressed: function() { root.cycleLayout() }

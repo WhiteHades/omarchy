@@ -13,8 +13,8 @@ const widgetButtonSource = fs.readFileSync(root + '/shell/Ui/WidgetButton.qml', 
 assert(/property real labelVerticalOffset:\s*0/.test(widgetButtonSource), 'bar labels expose a targeted vertical alignment offset')
 assert(/anchors\.verticalCenterOffset:\s*root\.labelVerticalOffset/.test(widgetButtonSource), 'bar labels apply their vertical alignment offset')
 assert(
-  /labelVerticalOffset:\s*root\.vertical\s*\?\s*0\s*:\s*Style\.space\(1\)/.test(keyboardSource),
-  'the horizontal keyboard label corrects its caption-font optical center'
+  /labelVerticalOffset:\s*root\.vertical\s*\?\s*0\s*:\s*Math\.max\(1,\s*Math\.round\(Style\.fontScale\)\)/.test(keyboardSource),
+  'the horizontal keyboard label corrects its caption-font optical center by font scale, not spacing'
 )
 
 // Trimmed from xkbcli list, keeping the format of every section it prints,
