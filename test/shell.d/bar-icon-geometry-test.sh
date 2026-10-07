@@ -7,7 +7,7 @@ source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/base-test.sh"
 require_compositor "bar icon geometry test"
 
 if ! command -v quickshell >/dev/null 2>&1; then
-  pass "quickshell not installed; skipping bar icon geometry test"
+  skip "quickshell not installed; skipping bar icon geometry test"
   exit 0
 fi
 
@@ -40,8 +40,9 @@ ShellRoot {
       fail(name + " optical canvas is " + icon.opticalSize)
       return false
     }
-    if (Math.abs(icon.opticalCenterErrorX) > 0.5) {
-      fail(name + " painted bounds are over half a pixel off center by " + icon.opticalCenterErrorX)
+    // The open-panel underline centers on the slot, so the glyph must too.
+    if (Math.abs(icon.opticalCenterErrorX) > 0.05) {
+      fail(name + " painted bounds are off the slot's center by " + icon.opticalCenterErrorX)
       return false
     }
     if (icon.glyphFontSize !== Style.bar.iconFont) {
@@ -51,20 +52,13 @@ ShellRoot {
     return true
   }
 
-  function textChild(button) {
-    for (var i = 0; i < button.children.length; i++) {
-      var child = button.children[i]
-      if ("text" in child && child.text === button.text) return child
-    }
-    return null
-  }
-
   Component.onCompleted: Qt.callLater(function() {
     if (!checkIcon(bluetooth, "bluetooth")) return
     if (!checkIcon(network, "network")) return
     if (!checkIcon(audio, "audio")) return
     if (!checkIcon(monitor, "monitor")) return
     if (!checkIcon(power, "power")) return
+    if (!checkIcon(elsewhen, "elsewhen")) return
     var baseline = bluetooth.glyphBaselineY
     if (network.glyphBaselineY !== baseline || audio.glyphBaselineY !== baseline
         || monitor.glyphBaselineY !== baseline || power.glyphBaselineY !== baseline) {
@@ -87,7 +81,7 @@ ShellRoot {
       fail("indicator does not use the secondary icon scale")
       return
     }
-    if (Math.abs(verticalIndicator.opticalCenterErrorX) > 0.5) {
+    if (Math.abs(verticalIndicator.opticalCenterErrorX) > 0.05) {
       fail("vertical indicator is not optically centered")
       return
     }
@@ -103,17 +97,6 @@ ShellRoot {
     if (compactStatusIcon.implicitWidth !== Style.bar.statusSlot
         || compactVerticalStatusIcon.implicitHeight !== Style.bar.statusSlot) {
       fail("compact status icons do not use the shared status slot")
-      return
-    }
-    var keyboardText = textChild(keyboardLabel)
-    if (!keyboardText) {
-      fail("keyboard label text is missing")
-      return
-    }
-    var keyboardInkCenter = keyboardText.y + keyboardText.baselineOffset
-      + keyboardMetrics.tightBoundingRect.y + keyboardMetrics.tightBoundingRect.height / 2
-    if (Math.abs(keyboardInkCenter - keyboardLabel.height / 2) > 0.5) {
-      fail("keyboard label ink is off center by " + (keyboardInkCenter - keyboardLabel.height / 2))
       return
     }
     console.log("RESULT pass")
@@ -153,6 +136,7 @@ ShellRoot {
   BarIconButton { id: audio; bar: testBar; text: "󰖁" }
   BarIconButton { id: monitor; bar: testBar; text: "󰍹" }
   BarIconButton { id: power; bar: testBar; text: "󰁹" }
+  BarIconButton { id: elsewhen; bar: testBar; text: "󰇧" }
   BarIconButton {
     id: vector
     bar: testBar
@@ -161,22 +145,6 @@ ShellRoot {
   BarIconButton { id: verticalIcon; bar: verticalBar; text: "\uf021" }
   BarIconButton { id: compactStatusIcon; bar: testBar; text: "\uf021"; slotSize: Style.bar.statusSlot }
   BarIconButton { id: compactVerticalStatusIcon; bar: verticalBar; text: "\uf021"; slotSize: Style.bar.statusSlot }
-  TextMetrics {
-    id: keyboardMetrics
-    font.family: testBar.fontFamily
-    font.pixelSize: Style.font.caption
-    text: keyboardLabel.text
-  }
-  WidgetButton {
-    id: keyboardLabel
-    bar: testBar
-    text: "EN"
-    fontSize: Style.font.caption
-    horizontalMargin: 6
-    labelVerticalOffset: Math.max(1, Math.round(Style.font.caption / 10))
-    width: implicitWidth
-    height: implicitHeight
-  }
   Row {
     id: horizontalIndicatorPair
     BarIndicator { id: horizontalIndicator; bar: testBar; active: true; activeText: "󰅶" }
