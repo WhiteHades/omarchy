@@ -10,7 +10,7 @@ const network = requireFromRoot('shell/plugins/panels/network/Model.js')
 const panelSource = fs.readFileSync(root + '/shell/plugins/panels/network/Panel.qml', 'utf8')
 
 assert(
-  /ListView\s*\{\s*id:\s*networkList[\s\S]*?width:\s*parent\.width/.test(panelSource),
+  /ListView\s*\{\s*id:\s*networkList\b[^{}]*?\n\s*width:\s*parent\.width\s*\n/.test(panelSource),
   'network keeps the scrollable list at the full panel width'
 )
 assert(/ScrollBar\.vertical:\s*ScrollBar\s*\{\s*id:\s*networkScrollBar/.test(panelSource), 'network gives its attached scrollbar a stable geometry reference')
